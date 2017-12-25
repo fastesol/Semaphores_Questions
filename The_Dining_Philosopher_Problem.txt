@@ -27,13 +27,13 @@ while(true) {
 /* FINAL Solution - With Deadlock avoidance */
 int n = 5; // Total Philosophers AND/OR Chopsticks
 int *sticks = new Semaphore[n]; // <-- Initialize with 1, means all the Philosophers can start eating at any time
-bool isHungary = new bool[n]; // <-- Initialize with false, means no one is hungary currently
+bool isHungry = new bool[n]; // <-- Initialize with false, means no one is hungry currently
 
-// Ith Process/Philosophers
+// i'th Process/Philosophers
 while(true) {
 	mutex.wait();
-		if(isHungary[(i == 0 ? n-1 : i-1)] == false && isHungary[(i+1) % 5] == false) { // ask previous and next Philosophers if they are hungary, if so, dont start eating.
-			isHungary[i] = true;
+		if(isHungry[(i == 0 ? n-1 : i-1)] == false && isHungry[(i+1) % 5] == false) { // ask previous and next Philosophers if they are hungry, if so, dont start eating.
+			isHungry[i] = true;
 			sticks[i].wait(); // lock on right stick
 			sticks[(i+1) % 5].wait(); // lock on left stick
 		}
@@ -42,7 +42,7 @@ while(true) {
 	// DO EATING
 	
 	mutex.wait();
-		isHungary[i] = false;
+		isHungry[i] = false;
 		sticks[i].signal(); // release lock on right stick
 		sticks[(i+1) % 5].signal(); // release lock on left stick
 	mutex.signal();
