@@ -1,0 +1,43 @@
+/* There is a shared resource which should be accessed by multiple processes. 
+ * There are two types of processes in this context. They are reader and writer. 
+ * Any number of readers can read from the shared resource simultaneously, but 
+ * only one writer can write to the shared resource. When a writer is writing 
+ * data to the resource, no other process can access the resource. A writer cannot 
+ * write to the resource if there are non zero number of readers accessing the 
+ * resource.
+ */
+ 
+
+
+int writer = 1;
+int semR = 0;
+int mutex = 0;
+int totalReaders = 0;
+
+
+// Writer Process
+while(true) {
+	writer.wait();
+	// DO WRITE
+	writer.signal();
+}
+
+
+// Reader Process
+while(true) {
+	mutex.wait();
+		if(totalReaders == 0) {
+			writer.wait();
+		}
+		totalReaders++;
+	mutex.signal();
+	
+	// DO READER
+	
+	mutex.wait();
+		if(totalReaders == 1) {
+			writer.signal();
+		}
+		totalReaders--;
+	mutex.signal();
+}
